@@ -1,0 +1,55 @@
+create procedure proc_grade(in rollno tinyint,in name varchar(15),in marks int) 
+begin 
+declare class varchar(25); 
+if marks>=990 and marks<=1500 then set class="Distinction"; 
+elseif marks<=989 and marks>=900 then set class="First Class"; 
+elseif marks<=899 and marks>=825 then set class="Second Class"; 
+elseif marks<=824 and marks>=700 then set class="Pass"; 
+else set class="Fail";
+end if;
+insert into studmarks values(name,marks);
+insert into result values(rollno,name,class);
+end$ 
+
+
+
+create function tot_stud(classname varchar(25)) 
+returns int 
+begin 
+declare total int(20);
+	select distinct count(*) into total 
+	from result 
+	where Class=classname;
+return total;
+end $
+
+
+
+Syntax for creating trigger:
+
+CREATE [OR REPLACE ] TRIGGER trigger_name   
+{BEFORE | AFTER | INSTEAD OF }   
+{INSERT [OR] | UPDATE [OR] | DELETE}   
+[OF col_name]   
+ON table_name   
+[REFERENCING OLD AS o NEW AS n]   
+[FOR EACH ROW]   
+WHEN (condition)    
+DECLARE  
+   Declaration-statements  
+BEGIN   
+   Executable-statements  
+EXCEPTION  
+   Exception-handling-statements  
+END;  
+
+
+
+create trigger t4
+after update on library
+for each row
+begin declare a4 varchar(10); 
+set a4="updated";
+insert into lib_audit
+values(old.B_id,old.Title,old.Authors,old.Edition,old.no_of_c,curdate(),a4,current_user());
+end;
